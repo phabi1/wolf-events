@@ -4,8 +4,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "wp-scripts start assets/apps/event-registration-form.js --output-path=dist",
-    "build": "wp-scripts build assets/apps/event-registration-form.js --output-path=dist"
+    "event-registration-form:start": "wp-scripts start assets/apps/event-registration-form/main.js --output-path=dist/event-registration-form",
+    "event-registration-form:build": "wp-scripts build assets/apps/event-registration-form/main.js --output-path=dist/event-registration-form"
   },
   "repository": {
     "type": "git",
