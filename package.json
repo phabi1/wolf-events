@@ -1,0 +1,24 @@
+{
+  "name": "wolf-events",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "wp-scripts start assets/apps/event-registration-form.js --output-path=dist",
+    "build": "wp-scripts build assets/apps/event-registration-form.js --output-path=dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/phabi1/wolf-events.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/phabi1/wolf-events/issues"
+  },
+  "homepage": "https://github.com/phabi1/wolf-events#readme",
+  "description": "",
+  "devDependencies": {
+    "@wordpress/scripts": "^30.24.0"
+  }
+}

@@ -1,0 +1,1 @@
+<a href="<?php echo $link; ?>" class="<?= $class ?>"><?php echo $text; ?></a>

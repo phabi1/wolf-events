@@ -1,0 +1,14 @@
+{
+    "name": "wolf/events",
+    "autoload": {
+        "psr-4": {
+            "Wolf\\Events\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "phabi1"
+        }
+    ],
+    "require": {}
+}
