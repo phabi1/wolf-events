@@ -1,0 +1,16 @@
+{
+    "name": "wolf/events",
+    "autoload": {
+        "psr-4": {
+            "Wolf\\Events\\": "inc/"
+        }
+    },
+    "authors": [
+        {
+            "name": "phabi1"
+        }
+    ],
+    "require": {
+        "fpdf/fpdf": "^1.86"
+    }
+}
