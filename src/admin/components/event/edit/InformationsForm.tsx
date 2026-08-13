@@ -1,61 +1,56 @@
-import Stack from "@mui/material/Stack";
-import InputField from "../../forms/fields/InputField";
-import Switch from "@mui/material/Switch";
-import { useEffect, useState } from "react";
-import { useFormContext } from "react-hook-form";
-import FormControlLabel from "@mui/material/FormControlLabel";
+import Stack from '@mui/material/Stack';
+import { useFormContext } from 'react-hook-form';
+import InputField from '../../forms/fields/InputField';
+import SwitchPanelField from '../../forms/fields/SwitchPanelField';
+import MachineNameField from '../../forms/fields/MachineNameField';
 
 export default function EventInformationsForm() {
-  const { setValue, watch } = useFormContext();
+	const { setValue } = useFormContext();
 
-  const hasRegistrationFields =
-    watch("registration_start") || watch("registration_end");
+	const handleRegistrationClose = () => {
+		setValue( 'registration_start', null );
+		setValue( 'registration_end', null );
+	};
 
-  console.log("hasRegistrationFields", hasRegistrationFields);
-
-  const [shownRegistrationFields, setShownRegistrationFields] = useState(
-    hasRegistrationFields,
-  );
-
-  useEffect(() => {
-    if (!shownRegistrationFields) {
-      setValue("registration_start", "");
-      setValue("registration_end", "");
-    }
-  }, [shownRegistrationFields]);
-
-  return (
-    <div>
-      <InputField name="title" label="Title" />
-      <Stack direction="row" spacing={2} mb={2}>
-        <InputField
-          name="event_start"
-          label="Event Start"
-          type="datetime-local"
-        />
-        <InputField name="event_end" label="Event End" type="datetime-local" />
-      </Stack>
-      <Switch
-        checked={shownRegistrationFields}
-        onChange={(e) => setShownRegistrationFields(e.target.checked)}
-      />
-      <Stack direction="row" spacing={2} mb={2}>
-        <InputField
-          name="registration_start"
-          label="Registration Start"
-          type="datetime-local"
-        />
-        <InputField
-          name="registration_end"
-          label="Registration End"
-          type="datetime-local"
-        />
-      </Stack>
-      <InputField
-        name="participant_max"
-        label="Max Participants"
-        type="number"
-      />
-    </div>
-  );
+	return (
+		<div>
+			<InputField name="title" label="Title" />
+			<MachineNameField name="slug" label="Slug" fieldName="title" />
+			<Stack direction="row" spacing={ 2 } mb={ 2 }>
+				<InputField
+					name="event_start"
+					label="Event Start"
+					type="datetime-local"
+				/>
+				<InputField
+					name="event_end"
+					label="Event End"
+					type="datetime-local"
+				/>
+			</Stack>
+			<SwitchPanelField
+				name="has_registration"
+				label="Has Registration"
+				onClose={ handleRegistrationClose }
+			>
+				<Stack direction="row" spacing={ 2 } mb={ 2 }>
+					<InputField
+						name="registration_start"
+						label="Registration Start"
+						type="datetime-local"
+					/>
+					<InputField
+						name="registration_end"
+						label="Registration End"
+						type="datetime-local"
+					/>
+				</Stack>
+			</SwitchPanelField>
+			<InputField
+				name="participant_max"
+				label="Max Participants"
+				type="number"
+			/>
+		</div>
+	);
 }

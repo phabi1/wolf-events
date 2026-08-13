@@ -25,6 +25,7 @@ class CreateEventUseCase implements UseCaseInterface
     {
         $data = [
             'title' => $params['title'] ?? 'Untitled Event',
+            'slug' => $params['slug'] ?? null,
             'event_start' => $params['event_start'],
             'event_end' => $params['event_end'],
             'registration_start' => $params['registration_start'] ?? null,

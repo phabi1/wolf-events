@@ -2,6 +2,7 @@
 
 use Wolf\Core\Entity\Definition\Field;
 use Wolf\Core\Entity\Definition\Relation;
+use Wolf\Events\Model\CheckoutStatus;
 
 return [
     'wolf-events.event' =>
@@ -52,6 +53,17 @@ return [
                 'seller_firstname' => ['type' => Field::TYPE_STRING, 'required' => true],
                 'seller_lastname' => ['type' => Field::TYPE_STRING, 'required' => true],
                 'seller_email' => ['type' => Field::TYPE_STRING, 'required' => true],
+                'status' => [
+                    'type' => Field::TYPE_STRING,
+                    'required' => true,
+                    'enum' => [
+                        CheckoutStatus::PENDING,
+                        CheckoutStatus::PAID,
+                        CheckoutStatus::CANCELLED
+                    ]
+                ],
+                'payed_at' => ['type' => Field::TYPE_DATETIME, 'nullable' => true],
+                'billing_payment_id' => ['type' => Field::TYPE_INTEGER, 'nullable' => true],
                 'meta' => ['type' => Field::TYPE_JSON, 'nullable' => true]
             ],
             'relations' => []

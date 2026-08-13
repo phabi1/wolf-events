@@ -2,6 +2,7 @@
 
 namespace Wolf\Events\UseCase;
 
+use Wolf\Core\UseCase\UseCaseBus;
 use Wolf\Core\UseCase\UseCaseInterface;
 use Wolf\Core\Entity\EntityManager;
 use Wolf\Events\Entity\Repository\EventRepository;
@@ -9,17 +10,17 @@ use Wolf\Events\Entity\Repository\TicketRepository;
 
 class RegisterToEventUseCase implements UseCaseInterface
 {
-    private $useCaseBus;
     private $participantRepository;
 
     private $checkoutRepository;
 
+    private UseCaseBus $useCaseBus;
 
     private EventRepository $eventRepository;
 
     private TicketRepository $ticketRepository;
 
-    public function __construct(EntityManager $entityManager)
+    public function __construct(EntityManager $entityManager, UseCaseBus $useCaseBus)
     {
 
         $this->participantRepository = $entityManager->getRepository('wolf-events.participant');
@@ -34,12 +35,19 @@ class RegisterToEventUseCase implements UseCaseInterface
             throw new \Exception("Ticket repository must be instance of TicketRepository");
         }
         $this->ticketRepository = $ticketRepository;
+
+        $this->useCaseBus = $useCaseBus;
     }
 
     public function execute(array $params = [])
     {
+        $event = $this->eventRepository->findById($params['event_id']);
+        if (!$event) {
+            throw new \Exception("Event not found");
+        }
+
         $checkoutData = [
-            'event_id' => $params['event_id'],
+            'event_id' => $event->id,
             'seller_firstname' => $params['registration']['firstname'],
             'seller_lastname' => $params['registration']['lastname'],
             'seller_email' => $params['registration']['email'],
@@ -56,7 +64,7 @@ class RegisterToEventUseCase implements UseCaseInterface
                 'firstname' => $participant['firstname'],
                 'lastname' => $participant['lastname'],
                 'fields' => $participant['fields'] ?? [],
-                'event_id' => $params['event_id'],
+                'event_id' => $event->id,
                 'ticket_id' => $participant['ticket_id'] ?? null,
                 'checkout_id' => $checkout->id
             ];
@@ -69,10 +77,31 @@ class RegisterToEventUseCase implements UseCaseInterface
             }
         }
 
-        $this->eventRepository->updateParticipantCount($params['event_id']);
+        $this->eventRepository->updateParticipantCount($event->id);
 
         foreach ($ticketUpdates as $ticketId) {
             $this->ticketRepository->updateParticipantCount($ticketId);
         }
+
+        $paymentType = $params['payment_type'] ?? 'helloasso';
+
+        $response = $this->useCaseBus->execute('wolf-billing.create_payment', [
+            'amount' => $checkout->amount,
+            'currency' => 'EUR',
+            'payment_method' => $paymentType,
+            'name' => 'Inscription à l\'événement ' . $event->title,
+            'payer' => [
+                'first_name' => $checkout->seller_firstname,
+                'last_name' => $checkout->seller_lastname,
+                'email' => $checkout->seller_email
+            ],
+            'metadata' => ['external_id' => 'event:' . $checkout->id]
+        ]);
+
+        return [
+            'success' => true,
+            'message' => 'Inscription réussie',
+            'payment_url' => $response['redirect_url'] ?? null
+        ];
     }
 }

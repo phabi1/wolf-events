@@ -19,10 +19,12 @@ class Api implements ContainerAwareInterface
     {
         add_action('rest_api_init', function () {
             $this->restRoutesHelper = Plugin::getContainer()->get('wolf.rest.routes');
+            $this->registerCheckoutRoutes();
             $this->registerEventRoutes();
             $this->registerSessionRoutes();
             $this->registerTicketRoutes();
             $this->registerParticipantRoutes();
+            $this->registerRegistrationRoutes();
         });
     }
 
@@ -38,11 +40,21 @@ class Api implements ContainerAwareInterface
     {
         return $this->getContainer()->get($controllerName);
     }
+    protected function registerCheckoutRoutes()
+    {
+        $controller = $this->getController('wolf-events.controller.checkout');
+        $this->restRoutesHelper->createRoutes('wolf-events/v1', 'checkouts', $controller);
+    }
 
     protected function registerEventRoutes()
     {
         $controller = $this->getController('wolf-events.controller.event');
         $this->restRoutesHelper->createRoutes('wolf-events/v1', 'events', $controller);
+        register_rest_route('wolf-events/v1', '/events/(?P<id>\d+)/amount', [
+            'methods' => 'GET',
+            'callback' => [$controller, 'amountAction'],
+            'permission_callback' => '__return_true',
+        ]);
     }
 
     protected function registerSessionRoutes()
@@ -66,5 +78,24 @@ class Api implements ContainerAwareInterface
             'callback' => [$controller, 'print'],
             'permission_callback' => '__return_true',
         ]);
+    }
+
+    protected function registerRegistrationRoutes()
+    {
+        $controller = $this->getController('wolf-events.controller.registration');
+        register_rest_route('wolf-events/v1', '/events/(?P<event_id>\d+)/registration', [
+            'methods' => 'GET',
+            'callback' => [$controller, 'info'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(
+            'wolf-events/v1',
+            '/events/(?P<event_id>\d+)/register',
+            [
+                'methods' => 'POST',
+                'callback' => [$controller, 'register'],
+                'permission_callback' => '__return_true',
+            ]
+        );
     }
 }

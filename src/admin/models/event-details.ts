@@ -1,6 +1,6 @@
-import { Event } from "./event";
+import { Event } from './event';
 
 export type EventDetails = Event & {
-  sessions: any[];
-  tickets: any[];
+	sessions: any[];
+	tickets: any[];
 };

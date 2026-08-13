@@ -20,6 +20,14 @@ class Plugin
 
         $api = new Api();
         $api->setup();
+
+        $this->registerBlocks();
+
+    }
+
+    public function registerBlocks()
+    {
+        wp_register_block_types_from_metadata_collection(WOLF_EVENTS_PLUGIN_DIR . 'build', WOLF_EVENTS_PLUGIN_DIR . 'build/blocks-manifest.php');
     }
 
     public function activate()

@@ -1,0 +1,25 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "wolf-events/registration-form",
+	"version": "0.1.0",
+	"title": "Registration Form",
+	"category": "widgets",
+	"icon": "smiley",
+	"description": "Formulaire d'inscription à un événement avec choix de tarif.",
+	"example": {},
+	"supports": {
+		"html": false
+	},
+	"attributes": {
+		"eventId": {
+			"type": "number",
+			"default": null
+		}
+	},
+	"textdomain": "registration-form",
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css",
+	"viewScript": "file:./view.js"
+}

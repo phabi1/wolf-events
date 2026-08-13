@@ -4,7 +4,7 @@ namespace Wolf\Events\Entity\Repository;
 
 use Wolf\Core\Entity\EntityRepository;
 
-class CheckoutRepository extends EntityRepository
+class CheckoutRepository extends EntityRepository implements CheckoutRepositoryInterface
 {
     use EventRepositoryTrait;
 
@@ -16,5 +16,15 @@ class CheckoutRepository extends EntityRepository
         $sql->from($this->definition['table'])
             ->where($where);
         return $this->db->row($sql);
+    }
+
+    public function getTotalAmountForEvent($eventId)
+    {
+        $sql = $this->db->createQuery();
+        $sql->select('SUM(amount) as total')
+            ->from($this->definition['table'])
+            ->where($this->db->expr()->eq('event_id', $eventId));
+        $result = $this->db->value($sql);
+        return $result ? floatval($result) : 0;
     }
 }
