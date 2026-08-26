@@ -2,6 +2,8 @@
 
 namespace Wolf\Events;
 
+use Wolf\Core\Migration\Migrator;
+
 class Plugin
 {
     public function run()
@@ -10,7 +12,13 @@ class Plugin
         register_activation_hook(__FILE__, [$this, 'activate']);
         register_deactivation_hook(__FILE__, [$this, 'deactivate']);
 
+        add_action('plugins_loaded', [$this, 'setup']);
         add_action('init', [$this, 'init']);
+    }
+
+    public function setup()
+    {
+        Migrator::upgrade('wolf-events', WOLF_EVENTS_PLUGIN_DIR, __NAMESPACE__, WOLF_EVENTS_PLUGIN_VERSION);
     }
 
     public function init()

@@ -14,5 +14,7 @@ require __DIR__ . '/vendor/autoload.php';
 
 define( 'WOLF_EVENTS_PLUGIN_DIR', plugin_dir_path(__FILE__));
 
+define( 'WOLF_EVENTS_PLUGIN_VERSION', '0.0.1');
+
 $plugin = new \Wolf\Events\Plugin();
 $plugin->run();
